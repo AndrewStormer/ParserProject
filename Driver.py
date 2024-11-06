@@ -4,7 +4,7 @@ from antlr4 import *
 from TinyPythonLexer import TinyPythonLexer
 from TinyPythonParser import TinyPythonParser
 from antlr4.tree.Trees import Trees
-#Hello
+
 filepath = "./project_deliverable_1.py"
 
 def main():
