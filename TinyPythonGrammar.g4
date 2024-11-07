@@ -2,27 +2,30 @@ grammar TinyPythonGrammar;
 
 start: (assign | arith)* EOF;
 
-assign: var assign_op (boolean | num | arith | operand | array | string);
-
-assign_op: '=' | '+=' | '-=' | '*=' | '/=';
-
-arith: operand arith_op operand (arith_op operand)*;
-
-arith_op: '+' | '-' | '*' | '/' | '%';
+assign: VAR ASSIGN_OP (INT | FLOAT | BOOLEAN | string | array | VAR);
 
 
-operand: var | num;
+arith: operand ARITH_OP operand (ARITH_OP operand)*;
+
+operand: VAR | INT;
+
+ARITH_OP: '+' | '-' | '*' | '/' | '%';
+
+ASSIGN_OP: '=' | '+=' | '-=' | '*=' | '/=';
 
 
-
-var: '^([a-zA-Z][a-zA-Z0-9]*(_*[a-zA-Z0-9])*)$';
-
-array: '^/[([0-9]+(/.[0-9]+)*,|/'.*/',|/".*/",)*([0-9]+(/.[0-9]+)*|/'.*/'|/".*/")/]$';
+array: '[' (((INT ',')+|(string ',')+|(FLOAT ',')+))? (INT|string|FLOAT) ']';
 
 
-num: '[0-9]+(/.[0-9]+)';
+VAR: [a-zA-Z]+[a-zA-Z0-9]*('_'*[a-zA-Z0-9])*;
 
-boolean: 'True' | 'False';
+INT: [0-9]+;
 
-string: '^/'.*/'$' | '^/".*/"$';
+FLOAT: [0-9]+('.'[0-9]+)?;
 
+BOOLEAN: 'True' | 'False';
+
+string: '\'' .+ '\'' |  '"' .+ '"';
+
+
+WS: [ /t/r]+ -> skip;
