@@ -1,23 +1,22 @@
 grammar TinyPythonGrammar;
 
-start: (assign | arith)* EOF;
+start: ((assign | arith)('\n')*)*EOF;
 
-assign: VAR ASSIGN_OP (INT | FLOAT | BOOLEAN | string | array | VAR);
-
+assign: VAR ASSIGN_OP (INT | FLOAT | BOOLEAN | STRING | array | VAR | arith);
 
 arith: operand ARITH_OP operand (ARITH_OP operand)*;
 
-operand: VAR | INT;
+operand: VAR | INT| BOOLEAN | FLOAT;
 
 ARITH_OP: '+' | '-' | '*' | '/' | '%';
 
 ASSIGN_OP: '=' | '+=' | '-=' | '*=' | '/=';
 
 
-array: '[' (((INT ',')+|(string ',')+|(FLOAT ',')+))? (INT|string|FLOAT) ']';
+array: '[' (((INT ',')+|(STRING ',')+|(FLOAT ',')+)) (INT|STRING|FLOAT) ']';
 
 
-VAR: [a-zA-Z]+[a-zA-Z0-9]*('_'*[a-zA-Z0-9])*;
+VAR: [a-zA-Z][a-zA-Z0-9]*('_'*[a-zA-Z0-9])*;
 
 INT: [0-9]+;
 
@@ -25,7 +24,7 @@ FLOAT: [0-9]+('.'[0-9]+)?;
 
 BOOLEAN: 'True' | 'False';
 
-string: '\'' .+ '\'' |  '"' .+ '"';
+STRING: '\'' .+? '\'' |  '"' .+? '"';
 
 
-WS: [ /t/r]+ -> skip;
+WS: [ \t\r]+ -> skip;
