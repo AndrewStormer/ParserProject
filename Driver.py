@@ -5,7 +5,7 @@ from TinyPythonGrammarLexer import TinyPythonGrammarLexer
 from TinyPythonGrammarParser import TinyPythonGrammarParser
 from antlr4.tree.Trees import Trees
 
-filepath = "./project_deliverable_1.py"
+filepath = "./project_deliverable_2.py"
 
 def main():
 
