@@ -1,7 +1,8 @@
 grammar TinyPythonGrammar;
 
-start: ((assign | arith | if)(NEWLINE)*)*EOF;
+start: (expr)*EOF;
 
+expr: (if_else | if | assign | arith) NEWLINE*;
 
 assign: VAR ASSIGN_OP (INT | FLOAT | BOOLEAN | STRING | array | VAR | arith);
 
@@ -12,13 +13,15 @@ ARITH_OP: '+' | '-' | '*' | '/' | '%';
 ASSIGN_OP: '=' | '+=' | '-=' | '*=' | '/=';
 
 
-if: 'if ' conditional ':' NEWLINE body+ elif* else?;
+if: 'if ' conditional ':' NEWLINE body+;
+
+if_else: if elif else?;
 
 elif: 'elif ' conditional ':' NEWLINE body+ NEWLINE;
 
 else: 'else:' NEWLINE body+;
 
-body: '\t'(assign | arith | if)(NEWLINE)*;
+body: (INDENT+ expr NEWLINE*)+;
 
 conditional: condition (('and'|'or') condition)*;
 
@@ -43,5 +46,7 @@ STRING: '\'' .*? '\'' |  '"' .*? '"';
 
 
 NEWLINE: '\r' | '\n' | '\r\n';
+
+INDENT: '\t' | ('    ');
 
 WS: [ ]+ -> skip;
