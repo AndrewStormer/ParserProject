@@ -1,8 +1,8 @@
 grammar TinyPythonGrammar;
 
-start: (expr)*EOF;
+start: (expr NEWLINE? | INDENT? NEWLINE+)* EOF;
 
-expr: (if_else | if | assign | arith) NEWLINE*;
+expr: assign | arith | if_else | for | while;
 
 assign: VAR ASSIGN_OP (INT | FLOAT | BOOLEAN | STRING | array | VAR | arith);
 
@@ -13,19 +13,23 @@ ARITH_OP: '+' | '-' | '*' | '/' | '%';
 ASSIGN_OP: '=' | '+=' | '-=' | '*=' | '/=';
 
 
-if: 'if ' conditional ':' NEWLINE body+;
+if_else: if elif* else?;
 
-if_else: if elif else?;
+if: 'if' (BOOLEAN | conditional) ':' body+ NEWLINE?; //NEWLINE works as DEDENT
 
-elif: 'elif ' conditional ':' NEWLINE body+ NEWLINE;
+elif: INDENT? 'elif' conditional ':' body+ NEWLINE?;
 
-else: 'else:' NEWLINE body+;
+else: INDENT? 'else:' body+ NEWLINE?;
 
-body: (INDENT+ expr NEWLINE*)+;
+for: 'for' VAR 'in' (range | array | VAR) ':' body+ NEWLINE?;
+
+while: 'while' '('? conditional ')'? ':' body+ NEWLINE?;
+
+body: (NEWLINE* INDENT expr);
 
 conditional: condition (('and'|'or') condition)*;
 
-condition: (operand COMPARE_OP operand | BOOLEAN | '(not' (BOOLEAN|operand) ')');
+condition: (operand (COMPARE_OP operand)* | '(not' (BOOLEAN|operand) ')');
 
 COMPARE_OP: '>' | '<' | '>=' | '<=' | '==' | '!=';
 
@@ -33,6 +37,8 @@ COMPARE_OP: '>' | '<' | '>=' | '<=' | '==' | '!=';
 operand: BOOLEAN | VAR | INT | FLOAT;
 
 array: '[' (((INT ',')* INT|(STRING ',')* STRING|(FLOAT ',')* FLOAT)) ']';
+
+range: 'range(' (INT ',')? INT ')';
 
 VAR: [a-zA-Z][a-zA-Z0-9]*('_'*[a-zA-Z0-9])*;
 
@@ -45,8 +51,14 @@ BOOLEAN: 'True' | 'False';
 STRING: '\'' .*? '\'' |  '"' .*? '"';
 
 
-NEWLINE: '\r' | '\n' | '\r\n';
+INDENT: '\t'+;
 
-INDENT: '\t' | ('    ');
+NEWLINE: '\r'? '\n';
 
-WS: [ ]+ -> skip;
+
+
+WS: [ \r]+ -> skip;
+
+COMMENT: '#' ~[\r\n]* -> skip;
+
+MULTILINE_COMMENT: ('\'\'\'' .*? '\'\'\'')+ -> skip;
