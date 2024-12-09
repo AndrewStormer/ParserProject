@@ -2,7 +2,7 @@
 
 ## About
 
-This is a Parser for a subset of Python created in Python for Principles of Programming Languages at University of Missouri.
+This is a Parser for a subset of Python created using python and Antlr4 for Principles of Programming Languages at University of Missouri.
 
 ## Group Members
 
@@ -14,13 +14,13 @@ Luke Howard
 The deliverables for this project are as follows:
 
 - Deliverable 1
-  - Arthmetic Operations
+  - Arithmetic Operations
   - Assignment Operations
 - Deliverable 2
   - if/elif/else blocks
-  - conditions statemnts
+  - conditional statements
 - Deliverable 3
-  - while and for Looops
+  - while and for Loops
   - Nested structures
   - Support for comments
 
